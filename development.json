@@ -1,0 +1,10 @@
+{
+	"apps" : [{
+		"name": "StackoverflowDataVisualization",
+		"script": "bin/www",
+		"watch": "../stackoverflow-scraping/",
+		"env": {
+	        "NODE_ENV": "development"
+	    }
+	}]
+}

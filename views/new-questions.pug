@@ -1,0 +1,9 @@
+extends layout
+
+block content
+	h1= title
+	canvas#newQuestionChart(height="100", data-labels= tags, data-count= count)
+
+block script
+	script(src='/chart/Chart.js')
+	script(src='/javascripts/index.js')
