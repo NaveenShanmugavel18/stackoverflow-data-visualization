@@ -2,3 +2,10 @@ extends layout
 
 block content
 	h1= title
+	a.btn.btn-info(href='/', role='button') Back
+	canvas#featuredQuestionChart(height="50", data-labels= questionTags, data-count= questionCount, data-title= chartTitle)
+	p #{message ? message : ''}
+
+block script
+	script(src='/chart/Chart.js')
+	script(src='/javascripts/index.js')

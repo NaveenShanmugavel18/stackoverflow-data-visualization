@@ -3,11 +3,12 @@ extends layout
 block content
 	h1= title
 	a.btn.btn-info(href='/new-questions', role='button') Chart for all new questions
-
-	form(action='/', method='post')
+	br
+	br
+	form.col-md-6.col-sm-6(action='/', method='post')
 		.form-group
-			label(for='exampleTextarea') Example textarea
-			textarea#exampleTextarea.form-control(rows='3')
+			label(for='exampleInputEmail1') Enter the tags (comma seperated)
+			input#tagInput.form-control(type='text', name='tags', placeholder='Enter tags comma seperated')
 		button.btn.btn-primary(type='submit') Submit
 	p= message
 

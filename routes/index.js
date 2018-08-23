@@ -4,16 +4,62 @@ const express = require('express');
 	config = require('../config');
 	mongoClient = require('mongodb').MongoClient;
 
+const getApiData = (item) => {
+	return new Promise((resolve, reject) => {
+		request({
+			uri:`https://api.stackexchange.com/2.2/questions/featured?order=desc&sort=activity&tagged=${item}&site=stackoverflow&filter=total`,
+			gzip: true,
+			method: 'GET',
+		}, (err, response, body) => {
+
+			if(response.statusCode === 200) {
+				body = JSON.parse(body);
+				count = body.total;
+				var obj = { item, count }
+				resolve(obj);
+			}
+		});
+	})
+}
+
 /* GET home page. */
 router.get('/', (req, res, next) => {
 	res.render('index', { title: 'Stackoverflow Data Visualization' });
-	next();
+	// next();
 });
 
 router.post('/', (req, res, next) => {
-	console.log(req.body);
-	res.render('questions', { title: 'Stackoverflow Data Visualization' });
+	var questionTags = [];
+	var questionCount = [];
 
+	if(req.body.tags) {
+		tags = req.body.tags.split(',');
+		Promise.all(tags.map((url) => {
+  			return getApiData(url)
+		})).then((result) =>  {
+			mongoClient.connect(config.url, function(err, db) {
+				if (err) throw err;
+				db.collection("featuredquestions").insert(result, function(err, dbres) {
+					if (err) throw err;
+					for (let item of dbres.ops) {
+						questionTags.push(item.item);
+						questionCount.push(item.count);
+					}
+					res.render('questions', { 
+						title: `Featured question Visualization`,
+						questionTags: questionTags,
+						questionCount: questionCount,
+						chartTitle: `Featured question tag wise`
+					});
+			  	});
+			});
+		}).catch((error) => {
+			res.render('questions', { 
+				title: 'Stackoverflow Data Visualization',
+				message: `Connect to your db and try again`
+			});
+		});
+	}
 });
 
 /* GET new questions for all tags. */
@@ -39,7 +85,8 @@ router.get('/new-questions', (req, res, next) => {
 			res.render('new-questions', {
 				title: `New Questions Visualization`,
 				tags: tags,
-				count: count
+				count: count,
+				chartTitle: `New question tag wise`
 			});
 		} else {
 			res.render('new-questions', {

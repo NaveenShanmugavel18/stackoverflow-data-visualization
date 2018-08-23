@@ -2,7 +2,8 @@ extends layout
 
 block content
 	h1= title
-	canvas#newQuestionChart(height="100", data-labels= tags, data-count= count)
+	a.btn.btn-info(href='/', role='button') Back
+	canvas#newQuestionChart(height="100", data-labels= tags, data-count= count, data-title= chartTitle)
 
 block script
 	script(src='/chart/Chart.js')
