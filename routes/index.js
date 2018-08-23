@@ -6,8 +6,14 @@ const express = require('express');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Stackoverflow Data Visualization' });
-  // next();
+	res.render('index', { title: 'Stackoverflow Data Visualization' });
+	next();
+});
+
+router.post('/', (req, res, next) => {
+	console.log(req.body);
+	res.render('questions', { title: 'Stackoverflow Data Visualization' });
+
 });
 
 /* GET new questions for all tags. */
