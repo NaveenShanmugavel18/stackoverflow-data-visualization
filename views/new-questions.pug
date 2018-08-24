@@ -3,7 +3,9 @@ extends layout
 block content
 	h1= title
 	a.btn.btn-info(href='/', role='button') Back
-	canvas#newQuestionChart(height="100", data-labels= tags, data-count= count, data-title= chartTitle)
+	if !message
+		canvas#newQuestionChart(height="100", data-labels= tags, data-count= count, data-title= chartTitle)
+	p #{message ? message : ''}
 
 block script
 	script(src='/chart/Chart.js')

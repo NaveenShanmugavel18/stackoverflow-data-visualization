@@ -38,7 +38,12 @@ router.post('/', (req, res, next) => {
   			return getApiData(url)
 		})).then((result) =>  {
 			mongoClient.connect(config.url, function(err, db) {
-				if (err) throw err;
+				if (err) {
+					res.render('questions', { 
+						title: 'Stackoverflow Data Visualization',
+						message: `Connect to your db and try again`
+					});
+				}
 				db.collection("featuredquestions").insert(result, function(err, dbres) {
 					if (err) throw err;
 					for (let item of dbres.ops) {
@@ -73,21 +78,28 @@ router.get('/new-questions', (req, res, next) => {
 		var count = [];
 		
 		if(response.statusCode === 200) {
-			const db = await mongoClient.connect(config.url);
-			body = JSON.parse(body);
-			dbres = await db.collection('newquestions').insert(body);
+			try {
+				const db = await mongoClient.connect(config.url);
+				body = JSON.parse(body);
+				dbres = await db.collection('newquestions').insert(body);
 
-			for (let item of dbres.ops[0].items) {
-				tags.push(item.name);
-				count.push(item.count);
+				for (let item of dbres.ops[0].items) {
+					tags.push(item.name);
+					count.push(item.count);
+				}
+
+				res.render('new-questions', {
+					title: `New Questions Visualization`,
+					tags: tags,
+					count: count,
+					chartTitle: `New question tag wise`
+				});
+			} catch(err) {
+				res.render('new-questions', {
+					title: `New Questions Visualization`,
+					message: `Connect to your db and try again`
+				});
 			}
-
-			res.render('new-questions', {
-				title: `New Questions Visualization`,
-				tags: tags,
-				count: count,
-				chartTitle: `New question tag wise`
-			});
 		} else {
 			res.render('new-questions', {
 				title: `New Questions Visualization`,
