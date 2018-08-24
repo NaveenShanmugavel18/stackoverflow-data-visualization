@@ -64,6 +64,11 @@ router.post('/', (req, res, next) => {
 				message: `Connect to your db and try again`
 			});
 		});
+	} else {
+		res.render('questions', { 
+			title: 'Stackoverflow Data Visualization',
+			message: `Please enter a valid tag`
+		});
 	}
 });
 
