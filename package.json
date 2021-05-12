@@ -8,7 +8,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.3",
-    "chart.js": "^2.7.2",
+    "chart.js": "^2.9.4",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "dotenv": "^8.1.0",
